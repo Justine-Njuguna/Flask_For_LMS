@@ -1,6 +1,8 @@
 """Course-related routes."""
-from flask import render_template
+
 import sqlite3
+from flask import render_template
+
 
 
 def register_course_routes(app):
@@ -34,5 +36,5 @@ def register_course_routes(app):
             (course_id,)
         ).fetchone()
         conn.close()
-        
+
         return render_template('course_detail.html', course=course)

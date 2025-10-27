@@ -1,3 +1,5 @@
+"""Application entry point for the LMS."""
+
 from flask import Flask, session, render_template
 from routes.auth import register_auth_routes
 from routes.courses import register_course_routes
@@ -20,4 +22,3 @@ def home():
 # Run the app
 if __name__ == '__main__':
     app.run(debug=True)
-    

@@ -17,15 +17,15 @@ cursor.execute('''
 
 # Insert initial course data
 courses = [
-    (1, "Introduction to Photography", 
+    (1, "Introduction to Photography",
      "Learn the basics of photography, including composition, lighting, and camera settings."),
-    (2, "Video Production Basics", 
+    (2, "Video Production Basics",
      "An introductory course on video production, covering filming techniques, editing, and more."),
-    (3, "Advanced Canva Design", 
-     "Master advanced design techniques using Canva to create stunning graphics and presentations."),
-    (4, "Robotics for beginners", 
+    (3, "Advanced Canva Design",
+     "Master advanced design techniques using Canva to create stunning graphics & presentations."),
+    (4, "Robotics for beginners",
      "Get started with robotics, learning about basic concepts."),
-    (5, "Introduction to Machine Learning", 
+    (5, "Introduction to Machine Learning",
      "Understand the fundamentals of machine learning, including algorithms and applications."),
 ]
 
