@@ -1,6 +1,4 @@
-"""Main FLask application entry point."""
-
-from flask import Flask, session
+from flask import Flask, session, render_template
 from routes.auth import register_auth_routes
 from routes.courses import register_course_routes
 
@@ -17,21 +15,9 @@ register_course_routes(app)
 def home():
     """Home page route"""
     user = session.get('username')
-    if user:
-        return f'''<h1>Hello World!</h1>
-                <p>Welcome back, {user}!</p>
-                <a href="/courses">View Courses</a> |  
-                <a href="/logout">Logout</a>
-            '''
-    else:
-        return '''
-            <h1>Hello World!</h1>
-            <p>Your first Flask app is running!</p>
-            <a href="/courses">View Courses</a> | 
-            <a href="/login">Login</a>
-        '''
+    return render_template('home.html', username=user)
 
 # Run the app
 if __name__ == '__main__':
     app.run(debug=True)
-# End of app.py
+    

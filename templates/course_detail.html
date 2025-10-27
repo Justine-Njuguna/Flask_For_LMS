@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ course.title }} - TKA Learning</title>
+</head>
+<body>
+    {% if course %}
+        <h1>{{ course.title }}</h1>
+        <p>{{ course.description }}</p>
+        <p><strong>Course ID:</strong> {{ course.id }}</p>
+        <a href="/courses">Back to Courses</a>
+    {% else %}
+        <h1>Course Not Found</h1>
+        <p>Sorry, that course does not exist.</p>
+        <a href="/courses">Back to Courses</a>
+    {% endif %}
+</body>
+</html>
