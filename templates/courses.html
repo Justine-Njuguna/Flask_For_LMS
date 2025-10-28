@@ -7,6 +7,9 @@
 </head>
 <body>
     <h1>Available Courses</h1>
+    {% if username %}
+        <p><a href="/add-course">➕ Add New Course</a></p>
+    {% endif %}
     <ul>
         {% for course in courses %}
             <li>

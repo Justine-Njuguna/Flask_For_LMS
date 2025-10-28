@@ -1,8 +1,7 @@
 """Course-related routes."""
 
 import sqlite3
-from flask import render_template
-
+from flask import render_template, session, redirect, request
 
 
 def register_course_routes(app):
@@ -23,7 +22,8 @@ def register_course_routes(app):
         courses_list = conn.execute('SELECT * FROM courses').fetchall()
         conn.close()
 
-        return render_template('courses.html', courses=courses_list)
+        user = session.get('username')
+        return render_template('courses.html', courses=courses_list, username=user)
 
     # Individual course details
     @app.route('/course/<int:course_id>')
@@ -38,3 +38,38 @@ def register_course_routes(app):
         conn.close()
 
         return render_template('course_detail.html', course=course)
+
+    # Add course page (GET - show form)
+    @app.route('/add-course')
+    def add_course():
+        """Add course page route - Admin only"""
+        # Check if user is logged in
+        if 'username' not in session:
+            return redirect('/login')
+
+        return render_template('add_course.html')
+
+    # Add course submission (POST - handle form submission)
+    @app.route('/add-course', methods=['POST'])
+    def add_course_submit():
+        """Handle add course form submission"""
+        # Check if user is logged in
+        if 'username' not in session:
+            return redirect('/login')
+
+        title = request.form['title']
+        description = request.form['description']
+
+        # Insert into database
+        conn = get_db_connection()
+        conn.execute(
+            'INSERT INTO courses (title, description) VALUES (?, ?)',
+            (title, description)
+        )
+
+        conn.commit()
+        conn.close()
+
+        return render_template('add_course.html',
+                               success='Course added successfully!')
+
