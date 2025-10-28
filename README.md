@@ -130,8 +130,8 @@ Or create a new account using the registration page!
 - [x] User registration system
 - [x] Jinja2 templating
 - [x] Session-based authentication
-- [ ] Admin dashboard for adding courses
-- [ ] Video embedding in courses
+- [x] Admin dashboard for adding courses
+- [x] Video embedding in courses
 - [ ] User progress tracking
 - [ ] Quizzes and assessments
 - [ ] Certificate generation
