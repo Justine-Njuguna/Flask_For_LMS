@@ -1,7 +1,9 @@
 """Course-related routes."""
 
 import sqlite3
+from urllib.parse import urlparse, parse_qs
 from flask import render_template, session, redirect, request
+
 
 
 def register_course_routes(app):
@@ -27,6 +29,43 @@ def register_course_routes(app):
         conn.row_factory = sqlite3.Row  # This lets us access columns by name
         return conn
 
+    # In routes/courses.py, after get_db_connection
+
+    def get_youtube_embed_url(video_url):
+        """Converts a standard YouTube URL into an embeddable URL."""
+        if not video_url:
+            return None
+
+        # Parse the URL to get its components
+        parsed_url = urlparse(video_url)
+        
+        # Check if it's a standard YouTube 'watch' link
+        if parsed_url.hostname in ('www.youtube.com', 'youtube.com') and \
+        parsed_url.path == '/watch':
+            
+            # Parse the query string to get the 'v' parameter (video ID)
+            video_id = parse_qs(parsed_url.query).get('v')
+            
+            if video_id:
+                # Return the embeddable URL format
+                return f"https://www.youtube.com/embed/{video_id[0]}"
+                
+        # Check if it's a shortened 'youtu.be' link
+        if parsed_url.hostname == 'youtu.be' and parsed_url.path:
+            # The video ID is the path itself (remove leading '/')
+            video_id = parsed_url.path[1:]
+            return f"https://www.youtube.com/embed/{video_id}"
+
+        # If it's already an embed link, or not YouTube, return it (or None)
+        # For now, we'll just handle the main cases.
+        # You could add Vimeo, etc., here later.
+        
+        # A simple fallback (less robust)
+        if 'embed' in video_url:
+            return video_url
+            
+        return None # Or return video_url if you want to try embedding other things
+    
     # Courses list page
     @app.route('/courses')
     def courses():
@@ -54,7 +93,9 @@ def register_course_routes(app):
 
         user = session.get('username')
         admin = is_admin()
-        return render_template('course_detail.html', course=course, username=user, is_admin=admin)
+        
+        embed_url = get_youtube_embed_url(course['video_url']) if course else None
+        return render_template('course_detail.html', course=course, username=user, is_admin=admin, embed_url=embed_url)
 
     # Add course page (GET - show form)
     @app.route('/add-course')
@@ -76,12 +117,14 @@ def register_course_routes(app):
 
         title = request.form['title']
         description = request.form['description']
+        
+        video_url = request.form.get('video_url')  # New field for video URL
 
         # Insert into database
         conn = get_db_connection()
         conn.execute(
-            'INSERT INTO courses (title, description) VALUES (?, ?)',
-            (title, description)
+            'INSERT INTO courses (title, description, video_url) VALUES (?, ?, ?)',
+            (title, description, video_url)
         )
 
         conn.commit()
@@ -130,12 +173,13 @@ def register_course_routes(app):
         
         title = request.form['title']
         description = request.form['description']
+        video_url = request.form.get('video_url')  # New field for video URL
         
         # Update in database
         conn = get_db_connection()
         conn.execute(
-            'UPDATE courses SET title = ?, description = ? WHERE id = ?',
-            (title, description, course_id)
+            'UPDATE courses SET title = ?, description = ?, video_url = ? WHERE id = ?',
+            (title, description, video_url, course_id)
         )
         conn.commit()
         conn.close()

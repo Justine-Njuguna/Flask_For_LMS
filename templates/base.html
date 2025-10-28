@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TKA Learning{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <nav class="nav">
+            <div>
+                <a href="/">🏠 Home</a>
+                <a href="/courses">📚 Courses</a>
+                {% if is_admin %}
+                    <a href="/add-course">➕ Add Course</a>
+                {% endif %}
+            </div>
+            <div class="user-info">
+                {% if username %}
+                    👤 {{ username }} | <a href="/logout">Logout</a>
+                {% else %}
+                    <a href="/login">Login</a> | <a href="/register">Register</a>
+                {% endif %}
+            </div>
+        </nav>
+        
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

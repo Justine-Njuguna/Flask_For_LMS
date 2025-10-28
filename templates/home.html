@@ -1,21 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TKA Learning - Home</title>
-</head>
-<body>
-    <h1>Hello World!</h1>
+{% extends "base.html" %}
+
+{% block title %}Home - TKA Learning{% endblock %}
+
+{% block content %}
+    <h1>Welcome to TKA Learning! 🎓</h1>
     
     {% if username %}
-        <p>Welcome back, {{ username }}!</p>
-        <a href="/courses">View Courses</a> | 
-        <a href="/logout">Logout</a>
+        <p>Hey there, <strong>{{ username }}</strong>! Ready to learn something new today?</p>
     {% else %}
-        <p>Your first Flask app is running!</p>
-        <a href="/courses">View Courses</a> | 
-        <a href="/login">Login</a>
+        <p>Your journey to knowledge starts here. Login or register to get started!</p>
     {% endif %}
-</body>
-</html>
+    
+    <div style="margin-top: 30px;">
+        <h2>Get Started</h2>
+        <p>Explore our courses and start learning at your own pace.</p>
+    </div>
+{% endblock %}

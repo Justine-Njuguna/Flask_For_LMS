@@ -1,23 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Courses - TKA Learning</title>
-</head>
-<body>
-    <h1>Available Courses</h1>
-    {% if is_admin %}
-        <p><a href="/add-course">➕ Add New Course</a></p>
-    {% endif %}
-    <ul>
+{% extends "base.html" %}
+
+{% block title %}Courses - TKA Learning{% endblock %}
+
+{% block content %}
+    <h1>Available Courses 📚</h1>
+    
+    <ul class="course-list">
         {% for course in courses %}
-            <li>
-                <a href="/course/{{ course.id }}">{{ course.title }}</a> - 
-                {{ course.description }}
+            <li class="course-item">
+                <h3><a href="/course/{{ course.id }}">{{ course.title }}</a></h3>
+                <p>{{ course.description }}</p>
             </li>
         {% endfor %}
     </ul>
-    <a href="/">Back to Home</a>
-</body>
-</html>
+{% endblock %}

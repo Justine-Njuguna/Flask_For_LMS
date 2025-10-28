@@ -1,36 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ course.title }} - TKA Learning</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block content %}
     {% if course %}
+
+        {% if is_admin %}
+            <div class="admin-controls" style="background: #f4f4f4; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
+                <strong>Admin Controls:</strong>
+                
+                <a href="/edit-course/{{ course.id }}" style="margin-left: 15px;">Edit Course</a>
+
+                <form action="/delete-course/{{ course.id }}" method="POST" style="display: inline; margin-left: 15px;">
+                    <input type="submit" value="Delete Course" onclick="return confirm('ARE YOU SURE you want to permanently delete this course?');" style="background: #f4f4f4; padding: 10px; margin-bottom: 15px; border: none; color: red; cursor: pointer;">
+                </form>
+            </div>
+        {% endif %}
         <h1>{{ course.title }}</h1>
         <p>{{ course.description }}</p>
-        <p><strong>Course ID:</strong> {{ course.id }}</p>
-        
-        {% if is_admin %}
-        <hr>
-        <p>
-            <a href="/edit-course/{{ course.id }}">✏️ Edit Course</a> | 
-            <form method="POST" action="/delete-course/{{ course.id }}" style="display: inline;">
-                <button type="submit" 
-                        onclick="return confirm('Are you sure you want to delete this course?')"
-                        style="background: none; border: none; color: blue; text-decoration: underline; cursor: pointer;">
-                    🗑️ Delete Course
-                </button>
-            </form>
-        </p>
+
+        {% if embed_url %}
+            <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000;">
+                <iframe 
+                    src="{{ embed_url }}" 
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+        {% else %}
+            <p><em>(No video provided for this course.)</em></p>
         {% endif %}
-        
-        <br>
-        <a href="/courses">Back to Courses</a>
+
     {% else %}
         <h1>Course Not Found</h1>
-        <p>Sorry, that course does not exist.</p>
-        <a href="/courses">Back to Courses</a>
+        <p>Sorry, we couldn't find the course you were looking for.</p>
     {% endif %}
-</body>
-</html>
+{% endblock %}

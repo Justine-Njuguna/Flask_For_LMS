@@ -1,37 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Course - TKA Learning</title>
-</head>
-<body>
-    <h1>Add New Course</h1>
-    
-    {% if success %}
-        <p style="color: green;">{{ success }}</p>
-    {% endif %}
-    
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
+{% extends "base.html" %}
+
+{% block title %}Add Course - TKA Learning{% endblock %}
+
+{% block content %}
+    <h1>Add New Course ➕</h1>
     
     <form method="POST" action="/add-course">
         <div>
-            <label>Course Title:</label><br>
-            <input type="text" name="title" required minlength="3" style="width: 400px;">
+            <label>Course Title:</label>
+            <input type="text" name="title" required minlength="3">
         </div>
-        <br>
         <div>
-            <label>Course Description:</label><br>
-            <textarea name="description" required minlength="10" rows="5" 
-                      style="width: 400px;"></textarea>
+            <label>Course Description:</label>
+            <textarea name="description" required minlength="10" rows="5"></textarea>
         </div>
-        <br>
+
+        <div>
+            <label>Video URL:</label>
+            <input type="text" name="video_url">
+            <small>e.g., A YouTube or Vimeo link</small>
+        </div>
         <button type="submit">Add Course</button>
     </form>
-    <br>
-    <a href="/courses">Back to Courses</a> | 
-    <a href="/">Home</a>
-</body>
-</html>
+{% endblock %}
