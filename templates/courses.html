@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Available Courses</h1>
-    {% if username %}
+    {% if is_admin %}
         <p><a href="/add-course">➕ Add New Course</a></p>
     {% endif %}
     <ul>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Course - TKA Learning</title>
+</head>
+<body>
+    <h1>Edit Course</h1>
+    
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    
+    {% if course %}
+    <form method="POST" action="/edit-course/{{ course.id }}">
+        <div>
+            <label>Course Title:</label><br>
+            <input type="text" name="title" value="{{ course.title }}" 
+                   required minlength="3" style="width: 400px;">
+        </div>
+        <br>
+        <div>
+            <label>Course Description:</label><br>
+            <textarea name="description" required minlength="10" rows="5" 
+                      style="width: 400px;">{{ course.description }}</textarea>
+        </div>
+        <br>
+        <button type="submit">Update Course</button>
+    </form>
+    {% else %}
+        <p>Course not found.</p>
+    {% endif %}
+    
+    <br>
+    <a href="/course/{{ course.id }}">Cancel</a> | 
+    <a href="/courses">Back to Courses</a>
+</body>
+</html>
