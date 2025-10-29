@@ -18,7 +18,7 @@ except sqlite3.OperationalError as e:
     # THis will error if the column already exists, which is fine.
     print(f"⚠️ Warning: Could not add 'video_url' column. It may already exist. Error: {e}")
     print("ℹ️  This may be because the 'video_url' column already exists.")
-    
+
 conn.commit()
 conn.close()
 print("Database connection closed.")

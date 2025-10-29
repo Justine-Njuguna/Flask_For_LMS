@@ -19,6 +19,11 @@
             <label>Course Description:</label>
             <textarea name="description" required minlength="10" rows="5">{{ course.description }}</textarea>
         </div>
+        <div>
+            <label>Video URL:</label>
+            <input type="text" name="video_url" value="{{ course.video_url or '' }}">
+            <small>e.g., A YouTube or Vimeo link</small>
+        </div>
         <button type="submit">Update Course</button>
         <a href="/course/{{ course.id }}" style="margin-left: 15px;">Cancel</a>
     </form>
