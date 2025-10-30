@@ -205,3 +205,64 @@ button[type="submit"]:hover,
         align-items: flex-start;
     }
 }
+
+/* Category filter buttons */
+.category-filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.filter-btn {
+    display: inline-block;
+    text-decoration: none;
+    line-height: 1.5;
+}
+
+.filter-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.filter-btn.inactive {
+    background: #6c757d !important;
+}
+
+/* Search form container */
+.search-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.search-input {
+    flex: 1;
+}
+
+/* Course item layout */
+.course-item-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+}
+
+.course-item-text {
+    flex: 1;
+}
+
+.category-badge {
+    background: #667eea;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    white-space: nowrap;
+    margin-left: 15px;
+}
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+}
