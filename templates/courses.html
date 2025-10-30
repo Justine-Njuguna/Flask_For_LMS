@@ -5,12 +5,90 @@
 {% block content %}
     <h1>Available Courses 📚</h1>
     
-    <ul class="course-list">
-        {% for course in courses %}
-            <li class="course-item">
-                <h3><a href="/course/{{ course.id }}">{{ course.title }}</a></h3>
-                <p>{{ course.description }}</p>
-            </li>
-        {% endfor %}
-    </ul>
+    {# Category Filter #}
+    <div style="margin-bottom: 20px;">
+        <strong>Filter by Category:</strong>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
+            <a href="/courses" class="btn" style="display: inline-block; text-decoration: none; {% if not category_filter %}background: #667eea;{% else %}background: #6c757d;{% endif %}">
+                All
+            </a>
+            <a href="/courses?category=Photography" class="btn" style="display: inline-block; text-decoration: none; {% if category_filter == 'Photography' %}background: #667eea;{% else %}background: #6c757d;{% endif %}">
+                📷 Photography
+            </a>
+            <a href="/courses?category=Video Production" class="btn" style="display: inline-block; text-decoration: none; {% if category_filter == 'Video Production' %}background: #667eea;{% else %}background: #6c757d;{% endif %}">
+                🎥 Video Production
+            </a>
+            <a href="/courses?category=Design" class="btn" style="display: inline-block; text-decoration: none; {% if category_filter == 'Design' %}background: #667eea;{% else %}background: #6c757d;{% endif %}">
+                🎨 Design
+            </a>
+            <a href="/courses?category=Technology" class="btn" style="display: inline-block; text-decoration: none; {% if category_filter == 'Technology' %}background: #667eea;{% else %}background: #6c757d;{% endif %}">
+                💻 Technology
+            </a>
+            <a href="/courses?category=Business" class="btn" style="display: inline-block; text-decoration: none; {% if category_filter == 'Business' %}background: #667eea;{% else %}background: #6c757d;{% endif %}">
+                💼 Business
+            </a>
+            <a href="/courses?category=Marketing" class="btn" style="display: inline-block; text-decoration: none; {% if category_filter == 'Marketing' %}background: #667eea;{% else %}background: #6c757d;{% endif %}">
+                📊 Marketing
+            </a>
+        </div>
+    </div>
+    
+    {# Search Bar #}
+    <form method="GET" action="/courses" style="margin-bottom: 30px;">
+        {% if category_filter %}
+            <input type="hidden" name="category" value="{{ category_filter }}">
+        {% endif %}
+        <div style="display: flex; gap: 10px;">
+            <input type="text" 
+                   name="search" 
+                   placeholder="Search courses by title or description..." 
+                   value="{{ search_query or '' }}"
+                   style="flex: 1; padding: 12px; border: 2px solid #e0e0e0; border-radius: 5px; font-size: 16px;">
+            <button type="submit" class="btn">🔍 Search</button>
+            {% if search_query %}
+                <a href="/courses{% if category_filter %}?category={{ category_filter }}{% endif %}" class="btn" style="background: #6c757d; display: inline-block; text-decoration: none; line-height: 1.5;">Clear</a>
+            {% endif %}
+        </div>
+    </form>
+
+    {% if search_query or category_filter %}
+        <p style="color: #666; margin-bottom: 20px;">
+            {% if search_query %}
+                <strong>Search results for:</strong> "{{ search_query }}"
+            {% endif %}
+            {% if category_filter %}
+                <strong>Category:</strong> {{ category_filter }}
+            {% endif %}
+            {% if courses|length == 0 %}
+                <span style="color: #f5576c;">(No courses found)</span>
+            {% else %}
+                <span style="color: #667eea;">({{ courses|length }} course{{ 's' if courses|length != 1 }})</span>
+            {% endif %}
+        </p>
+    {% endif %}
+
+    {% if courses|length > 0 %}
+        <ul class="course-list">
+            {% for course in courses %}
+                <li class="course-item">
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div style="flex: 1;">
+                            <h3><a href="/course/{{ course.id }}">{{ course.title }}</a></h3>
+                            <p>{{ course.description }}</p>
+                        </div>
+                        {% if course.category %}
+                            <span style="background: #667eea; color: white; padding: 5px 15px; border-radius: 20px; font-size: 14px; white-space: nowrap; margin-left: 15px;">
+                                {{ course.category }}
+                            </span>
+                        {% endif %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div style="text-align: center; padding: 40px; color: #999;">
+            <h3>No courses found</h3>
+            <p>Try a different search term or category, or <a href="/courses">view all courses</a>.</p>
+        </div>
+    {% endif %}
 {% endblock %}

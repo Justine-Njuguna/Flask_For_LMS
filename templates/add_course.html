@@ -14,7 +14,18 @@
             <label>Course Description:</label>
             <textarea name="description" required minlength="10" rows="5"></textarea>
         </div>
-
+        <div>
+            <label>Category:</label>
+            <select name="category" required style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 5px; font-size: 16px; margin-bottom: 15px;">
+                <option value="Photography">📷 Photography</option>
+                <option value="Video Production">🎥 Video Production</option>
+                <option value="Design">🎨 Design</option>
+                <option value="Technology">💻 Technology</option>
+                <option value="Business">💼 Business</option>
+                <option value="Marketing">📊 Marketing</option>
+                <option value="General" selected>📚 General</option>
+            </select>
+        </div>
         <div>
             <label>Video URL:</label>
             <input type="text" name="video_url">

@@ -20,6 +20,18 @@
             <textarea name="description" required minlength="10" rows="5">{{ course.description }}</textarea>
         </div>
         <div>
+            <label>Category:</label>
+            <select name="category" required style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 5px; font-size: 16px; margin-bottom: 15px;">
+                <option value="Photography" {% if course.category == 'Photography' %}selected{% endif %}>📷 Photography</option>
+                <option value="Video Production" {% if course.category == 'Video Production' %}selected{% endif %}>🎥 Video Production</option>
+                <option value="Design" {% if course.category == 'Design' %}selected{% endif %}>🎨 Design</option>
+                <option value="Technology" {% if course.category == 'Technology' %}selected{% endif %}>💻 Technology</option>
+                <option value="Business" {% if course.category == 'Business' %}selected{% endif %}>💼 Business</option>
+                <option value="Marketing" {% if course.category == 'Marketing' %}selected{% endif %}>📊 Marketing</option>
+                <option value="General" {% if course.category == 'General' or not course.category %}selected{% endif %}>📚 General</option>
+            </select>
+        </div>
+        <div>
             <label>Video URL:</label>
             <input type="text" name="video_url" value="{{ course.video_url or '' }}">
             <small>e.g., A YouTube or Vimeo link</small>

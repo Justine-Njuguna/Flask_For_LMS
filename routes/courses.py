@@ -2,7 +2,7 @@
 
 from urllib.parse import urlparse, parse_qs
 from flask import render_template, session, redirect, request
-from helpers import is_admin, get_db_connection
+from helpers import is_admin, get_db_connection, get_user_id, is_course_completed
 
 
 
@@ -45,18 +45,47 @@ def register_course_routes(app):
 
         return None # Or return video_url if you want to try embedding other things
 
-    # Courses list page
     @app.route('/courses')
     def courses():
         """Courses page route"""
+
+        search_query = request.args.get('search', '').strip()
+        category_filter = request.args.get('category', '').strip()  # NEW!
+
         # Connect to database and fetch all courses
         conn = get_db_connection()
-        courses_list = conn.execute('SELECT * FROM courses').fetchall()
+
+        # Build query based on filters
+        if search_query and category_filter:
+            # Both search and category
+            courses_list = conn.execute(
+                'SELECT * FROM courses WHERE (title LIKE ? OR description LIKE ?) AND category = ?',
+                (f'%{search_query}%', f'%{search_query}%', category_filter)
+            ).fetchall()
+        elif search_query:
+            # Just search
+            courses_list = conn.execute(
+                'SELECT * FROM courses WHERE title LIKE ? OR description LIKE ?',
+                (f'%{search_query}%', f'%{search_query}%')
+            ).fetchall()
+        elif category_filter:
+            # Just category filter
+            courses_list = conn.execute(
+                'SELECT * FROM courses WHERE category = ?',
+                (category_filter,)
+            ).fetchall()
+        else:
+            # Show all courses
+            courses_list = conn.execute('SELECT * FROM courses').fetchall()
+
         conn.close()
 
         user = session.get('username')
         admin = is_admin()
-        return render_template('courses.html', courses=courses_list, username=user, is_admin=admin)
+        return render_template('courses.html', courses=courses_list,
+                            username=user, is_admin=admin, 
+                            search_query=search_query,
+                            category_filter=category_filter)  # Pass category_filter too!
 
     # Individual course details
     @app.route('/course/<int:course_id>')
@@ -73,8 +102,17 @@ def register_course_routes(app):
         user = session.get('username')
         admin = is_admin()
 
+        # Check if course is completed by current user
+        is_completed = False
+        if user:
+            user_id = get_user_id(user)
+            if user_id:
+                is_completed = is_course_completed(user_id, course_id)
+
         embed_url = get_youtube_embed_url(course['video_url']) if course else None
-        return render_template('course_detail.html', course=course, username=user, is_admin=admin, embed_url=embed_url)
+        return render_template('course_detail.html',
+                               course=course, username=user, is_admin=admin,
+                               embed_url=embed_url, is_completed=is_completed)
 
     # Add course page (GET - show form)
     @app.route('/add-course')
@@ -98,12 +136,13 @@ def register_course_routes(app):
         description = request.form['description']
 
         video_url = request.form.get('video_url')  # New field for video URL
+        category = request.form.get('category', 'General')  # Example of additional field
 
         # Insert into database
         conn = get_db_connection()
         conn.execute(
-            'INSERT INTO courses (title, description, video_url) VALUES (?, ?, ?)',
-            (title, description, video_url)
+            'INSERT INTO courses (title, description, video_url, category) VALUES (?, ?, ?, ?)',
+            (title, description, video_url, category)
         )
 
         conn.commit()
@@ -153,15 +192,54 @@ def register_course_routes(app):
         title = request.form['title']
         description = request.form['description']
         video_url = request.form.get('video_url')  # New field for video URL
+        category = request.form.get('category', 'General')  # Adding category field
 
         # Update in database
         conn = get_db_connection()
         conn.execute(
-            'UPDATE courses SET title = ?, description = ?, video_url = ? WHERE id = ?',
-            (title, description, video_url, course_id)
+            'UPDATE courses SET title = ?, description = ?, video_url = ?, category = ? WHERE id = ?',
+            (title, description, video_url, category, course_id)
         )
         conn.commit()
         conn.close()
 
         # Redirect to course detail page (PRG pattern!)
+        return redirect(f'/course/{course_id}')
+
+    # Mark course as complete/incomplete
+    @app.route('/toggle-complete/<int:course_id>', methods=['POST'])
+    def toggle_complete(course_id):
+        """Toggle course completion status for current user"""
+        if 'username' not in session:
+            return redirect('/login')
+
+        user_id = get_user_id(session['username'])
+        if not user_id:
+            return redirect('/login')
+
+        conn = get_db_connection()
+
+        # Check if progress record exists
+        existing = conn.execute(
+            'SELECT * FROM course_progress WHERE user_id = ? AND course_id = ?',
+            (user_id, course_id)
+        ).fetchone()
+
+        if existing:
+            # Toggle the completed status
+            new_status = 0 if existing['completed'] == 1 else 1
+            conn.execute(
+                'UPDATE course_progress SET completed = ?,completed_at = CURRENT_TIMESTAMP WHERE user_id = ? AND course_id = ?',
+                (new_status, user_id, course_id)
+            )
+        else:
+            # Create new progress record (marked as complete)
+            conn.execute(
+                'INSERT INTO course_progress (user_id, course_id, completed) VALUES (?, ?, 1)',
+                (user_id, course_id)
+            )
+
+        conn.commit()
+        conn.close()
+
         return redirect(f'/course/{course_id}')

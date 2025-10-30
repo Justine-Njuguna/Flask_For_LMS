@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 
+{% block title %}{{ course.title if course else 'Course Not Found' }} - TKA Learning{% endblock %}
+
 {% block content %}
     {% if course %}
-
+        {# Admin Controls #}
         {% if is_admin %}
             <div class="admin-controls" style="background: #f4f4f4; padding: 10px; margin-bottom: 15px; border-radius: 5px;">
                 <strong>Admin Controls:</strong>
@@ -10,15 +12,20 @@
                 <a href="/edit-course/{{ course.id }}" style="margin-left: 15px;">Edit Course</a>
 
                 <form action="/delete-course/{{ course.id }}" method="POST" style="display: inline; margin-left: 15px;">
-                    <input type="submit" value="Delete Course" onclick="return confirm('ARE YOU SURE you want to permanently delete this course?');" style="background: #f4f4f4; padding: 10px; margin-bottom: 15px; border: none; color: red; cursor: pointer;">
+                    <input type="submit" value="Delete Course" 
+                           onclick="return confirm('ARE YOU SURE you want to permanently delete this course?');" 
+                           style="background: #f4f4f4; padding: 10px; margin-bottom: 15px; border: none; color: red; cursor: pointer;">
                 </form>
             </div>
         {% endif %}
+
+        {# Course Content #}
         <h1>{{ course.title }}</h1>
         <p>{{ course.description }}</p>
 
+        {# Video Player #}
         {% if embed_url %}
-            <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000;">
+            <div class="video-container" style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; margin-top: 20px;">
                 <iframe 
                     src="{{ embed_url }}" 
                     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
@@ -28,10 +35,29 @@
                 </iframe>
             </div>
         {% else %}
-            <p><em>(No video provided for this course.)</em></p>
+            <p style="margin-top: 20px;"><em>(No video provided for this course.)</em></p>
+        {% endif %}
+
+        {# Progress Tracking - for logged in users #}
+        {% if username %}
+            <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 5px;">
+                <h3>Your Progress</h3>
+                {% if is_completed %}
+                    <p style="color: green;">✅ You've completed this course!</p>
+                    <form method="POST" action="/toggle-complete/{{ course.id }}">
+                        <button type="submit" class="btn" style="background: #6c757d;">Mark as Incomplete</button>
+                    </form>
+                {% else %}
+                    <p>Track your learning progress by marking this course as complete.</p>
+                    <form method="POST" action="/toggle-complete/{{ course.id }}">
+                        <button type="submit" class="btn">✅ Mark as Complete</button>
+                    </form>
+                {% endif %}
+            </div>
         {% endif %}
 
     {% else %}
+        {# Course Not Found #}
         <h1>Course Not Found</h1>
         <p>Sorry, we couldn't find the course you were looking for.</p>
     {% endif %}
