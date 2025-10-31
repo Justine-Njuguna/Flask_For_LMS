@@ -22,6 +22,8 @@ A fully-featured Learning Management System built with Flask for managing and de
 ### User Experience
 - 🎨 **Modern UI** - Clean, gradient-based design with CSS styling
 - 📱 **Responsive Design** - Works on desktop and mobile
+- 📊 **User Dashboard** - Visual overview of completed courses and progress
+- 🗺️ **Breadcrumb Navigation** - Easy-to-follow navigation trail
 - 🎯 **Intuitive Navigation** - Easy-to-use interface with clear navigation
 - 💬 **User Feedback** - Success/error messages for all actions
 - 🔄 **Session Persistence** - Stay logged in across pages
@@ -53,7 +55,8 @@ TKA_lms/
 │   ├── courses.html               # Course listing with search/filter
 │   ├── course_detail.html         # Individual course page
 │   ├── add_course.html            # Add course form (admin)
-│   └── edit_course.html           # Edit course form (admin)
+│   ├── edit_course.html           # Edit course form (admin)
+│   └── dashboard.html             # User progress dashboard
 ├── static/
 │   └── css/
 │       └── style.css              # Main stylesheet
@@ -102,7 +105,7 @@ cd Flask_For_LMS
 ### 2. Create and activate virtual environment
 ```bash
 python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # On Windows: venv\Scriptsctivate
 ```
 
 ### 3. Install dependencies
@@ -134,7 +137,7 @@ Open your browser and go to `http://127.0.0.1:5000/`
 - **Username:** admin
 - **Password:** password
 
-**Note:** Change these credentials in production!
+> ⚠️ Change these credentials in production!
 
 ### Available Routes
 - `/` - Home page
@@ -145,6 +148,7 @@ Open your browser and go to `http://127.0.0.1:5000/`
 - `/courses?search=keyword` - Search courses
 - `/courses?category=Photography` - Filter by category
 - `/course/<id>` - View specific course details
+- `/dashboard` - User progress dashboard
 - `/add-course` - Add new course (admin only)
 - `/edit-course/<id>` - Edit course (admin only)
 - `/delete-course/<id>` - Delete course (admin only, POST)
@@ -169,6 +173,7 @@ Open your browser and go to `http://127.0.0.1:5000/`
 ### Progress Tracking
 - Mark courses as complete/incomplete
 - Track completion status per user
+- User Dashboard with progress visualization (stats, charts)
 - Progress data persists across sessions
 - Visual indicators for completed courses
 
@@ -196,9 +201,9 @@ Open your browser and go to `http://127.0.0.1:5000/`
 ## Roadmap
 
 ### Next Up
-- [ ] User dashboard with progress overview
+- [x] User dashboard with progress overview
 - [ ] Related courses suggestions
-- [ ] Breadcrumb navigation
+- [x] Breadcrumb navigation
 
 ### Planned Features
 - [ ] Course reviews and ratings
@@ -234,11 +239,11 @@ Open your browser and go to `http://127.0.0.1:5000/`
 
 ## Security Features
 
-✅ Password hashing with Werkzeug
-✅ SQL injection prevention with parameterized queries
-✅ Admin-only route protection
-✅ Session-based authentication
-✅ POST-only destructive operations
+✅ Password hashing with Werkzeug  
+✅ SQL injection prevention with parameterized queries  
+✅ Admin-only route protection  
+✅ Session-based authentication  
+✅ POST-only destructive operations  
 ✅ CSRF confirmation dialogs
 
 ## Contributing
@@ -277,6 +282,8 @@ This project was built progressively over multiple sessions, adding features one
 7. Progress tracking system
 8. Search functionality
 9. Course categorization and filtering
+10. User dashboard and progress visualization
+11. Breadcrumb navigation system
 
 Each feature was implemented with proper security, error handling, and user experience in mind.
 
