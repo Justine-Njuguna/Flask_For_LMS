@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}My Dashboard - TKA Learning{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+
+    <h1>My Learning Dashboard 📊</h1>
+    <p style="color: #666; margin-bottom: 30px;">Welcome back, <strong>{{ username }}</strong>! Here's your progress.</p>
+
+    {# Stats Overview #}
+    <div class="dashboard-stats">
+        <div class="stat-card">
+            <div class="stat-number">{{ total_courses }}</div>
+            <div class="stat-label">Total Courses</div>
+        </div>
+        <div class="stat-card completed">
+            <div class="stat-number">{{ completed_count }}</div>
+            <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-card in-progress">
+            <div class="stat-number">{{ in_progress_count }}</div>
+            <div class="stat-label">In Progress</div>
+        </div>
+        <div class="stat-card percentage">
+            <div class="stat-number">{{ "%.0f"|format(completion_percentage) }}%</div>
+            <div class="stat-label">Completion Rate</div>
+        </div>
+    </div>
+
+    {# Progress Bar #}
+    <div class="progress-section">
+        <h3>Overall Progress</h3>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: {{ completion_percentage }}%;"></div>
+        </div>
+        <p style="color: #666; margin-top: 10px;">
+            You've completed {{ completed_count }} out of {{ total_courses }} courses
+        </p>
+    </div>
+
+    {# Completed Courses #}
+    {% if completed|length > 0 %}
+    <div class="dashboard-section">
+        <h2>✅ Completed Courses ({{ completed_count }})</h2>
+        <ul class="course-list">
+            {% for course in completed %}
+                <li class="course-item">
+                    <div class="course-item-content">
+                        <div class="course-item-text">
+                            <h3>
+                                <span style="color: green; margin-right: 10px;">✓</span>
+                                <a href="/course/{{ course.id }}">{{ course.title }}</a>
+                            </h3>
+                            <p>{{ course.description }}</p>
+                            <small style="color: #999;">
+                                Completed on {{ course.completed_at[:10] }}
+                            </small>
+                        </div>
+                        {% if course.category %}
+                            <span class="category-badge">{{ course.category }}</span>
+                        {% endif %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {# In Progress Courses #}
+    {% if in_progress|length > 0 %}
+    <div class="dashboard-section">
+        <h2>📖 In Progress ({{ in_progress_count }})</h2>
+        <ul class="course-list">
+            {% for course in in_progress %}
+                <li class="course-item">
+                    <div class="course-item-content">
+                        <div class="course-item-text">
+                            <h3>
+                                <span style="color: orange; margin-right: 10px;">⏳</span>
+                                <a href="/course/{{ course.id }}">{{ course.title }}</a>
+                            </h3>
+                            <p>{{ course.description }}</p>
+                        </div>
+                        {% if course.category %}
+                            <span class="category-badge">{{ course.category }}</span>
+                        {% endif %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {# No Progress Yet #}
+    {% if completed|length == 0 and in_progress|length == 0 %}
+    <div class="empty-state">
+        <h3>Start Your Learning Journey! 🚀</h3>
+        <p>You haven't started any courses yet. Browse our <a href="/courses">course catalog</a> to get started!</p>
+    </div>
+    {% endif %}
+{% endblock %}

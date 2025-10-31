@@ -82,12 +82,20 @@ def register_course_routes(app):
 
         user = session.get('username')
         admin = is_admin()
+
+        # Define the breadcrumbs
+        breadcrumbs = [
+            { "name": "Home", "url": "/" },
+            { "name": "Courses", "url": None } # None for the active page
+        ]
+
         return render_template('courses.html', courses=courses_list,
                             username=user, is_admin=admin, 
                             search_query=search_query,
-                            category_filter=category_filter)  # Pass category_filter too!
+                            category_filter=category_filter,
+                            breadcrumbs=breadcrumbs)
 
-    # Individual course details
+# Individual course details
     @app.route('/course/<int:course_id>')
     def course_details(course_id):
         """Course details page route"""
@@ -102,17 +110,46 @@ def register_course_routes(app):
         user = session.get('username')
         admin = is_admin()
 
-        # Check if course is completed by current user
+        # Initialize variables that depend on the course
         is_completed = False
-        if user:
-            user_id = get_user_id(user)
-            if user_id:
-                is_completed = is_course_completed(user_id, course_id)
+        embed_url = None
+        breadcrumbs = []  # Start with an empty list
 
-        embed_url = get_youtube_embed_url(course['video_url']) if course else None
+        if course:
+            # --- This logic runs ONLY if the course was found ---
+
+            # Check completion status
+            if user:
+                user_id = get_user_id(user)
+                if user_id:
+                    is_completed = is_course_completed(user_id, course_id)
+
+            # Get the embed URL (this is now safe)
+            embed_url = get_youtube_embed_url(course['video_url'])
+
+            # NEW: Define the breadcrumbs for this page
+            breadcrumbs = [
+                { "name": "Home", "url": "/" },
+                { "name": "Courses", "url": "/courses" },
+                { "name": course['title'], "url": None } # Dynamic name
+            ]
+        else:
+            # --- This logic runs if course is None (Not Found) ---
+
+            # NEW: Define breadcrumbs for the "Not Found" case
+            breadcrumbs = [
+                { "name": "Home", "url": "/" },
+                { "name": "Not Found", "url": None }
+            ]
+
+        # This return statement now handles all cases
         return render_template('course_detail.html',
-                               course=course, username=user, is_admin=admin,
-                               embed_url=embed_url, is_completed=is_completed)
+                               course=course, 
+                               username=user, 
+                               is_admin=admin,
+                               embed_url=embed_url, 
+                               is_completed=is_completed,
+                               breadcrumbs=breadcrumbs) # <-- Pass the new list
 
     # Add course page (GET - show form)
     @app.route('/add-course')
@@ -121,8 +158,15 @@ def register_course_routes(app):
         # Check if user is logged in
         if not is_admin():
             return redirect('/login')
+        
+        # Define breadcrumbs
+        breadcrumbs = [
+            { "name": "Home", "url": "/" },
+            { "name": "Courses", "url": "/courses" },
+            { "name": "Add Course", "url": None } # None for active page
+        ]
 
-        return render_template('add_course.html')
+        return render_template('add_course.html', breadcrumbs=breadcrumbs)
 
     # Add course submission (POST - handle form submission)
     @app.route('/add-course', methods=['POST'])
@@ -179,8 +223,15 @@ def register_course_routes(app):
             (course_id,)
         ).fetchone()
         conn.close()
+        
+        # define breadcrumbs
+        breadcrumbs = [
+            { "name": "Home", "url": "/" },
+            { "name": "Courses", "url": "/courses" },
+            { "name": f"Edit {course['title']}", "url": None } # Dynamic name
+        ]
 
-        return render_template('edit_course.html', course=course)
+        return render_template('edit_course.html', course=course, breadcrumbs=breadcrumbs)
 
     # Edit course submission (POST - update database)
     @app.route('/edit-course/<int:course_id>', methods=['POST'])
@@ -243,3 +294,69 @@ def register_course_routes(app):
         conn.close()
 
         return redirect(f'/course/{course_id}')
+
+  #User Dashboard
+    @app.route('/dashboard')
+    def dashboard():
+        """User dashboard showing progress"""
+        if 'username' not in session:
+            return redirect('/login')
+
+        user_id = get_user_id(session['username'])
+        if not user_id:
+            return redirect('/login')
+
+        conn = get_db_connection()
+
+        # Get all courses
+        all_courses = conn.execute('SELECT * FROM courses').fetchall()
+
+        # Get completed courses
+        # FIX 1: Set completed = 1
+        # FIX 2: Select cp.completed_at so the template can use it
+        completed = conn.execute(
+            '''SELECT c.*, cp.completed_at
+            FROM courses c
+            JOIN course_progress cp ON c.id = cp.course_id
+            WHERE cp.user_id = ? AND cp.completed = 1''',
+            (user_id,)
+        ).fetchall()
+
+        # Get in-progress courses (not completed)
+        # FIX 1: Set completed = 0
+        in_progress = conn.execute(
+            '''SELECT c.*
+            FROM courses c
+            JOIN course_progress cp ON c.id = cp.course_id
+            WHERE cp.user_id = ? AND cp.completed = 0''',
+            (user_id,)
+        ).fetchall()
+
+        conn.close()
+
+        # Calculate stats
+        total_courses = len(all_courses)
+        completed_count = len(completed)
+        in_progress_count = len(in_progress)
+        completion_percentage = (completed_count / total_courses * 100) if total_courses > 0 else 0
+
+        user = session.get('username')
+        admin = is_admin()
+        
+        # Define the breadcrumbs
+        breadcrumbs = [
+            { "name": "Home", "url": "/" },
+            { "name": "Dashboard", "url": None } # None for the active page
+        ]
+
+        return render_template('dashboard.html',
+                               username=user,
+                               is_admin=admin,
+                               all_courses=all_courses,
+                               completed=completed,
+                               in_progress=in_progress,
+                               total_courses=total_courses,
+                               completed_count=completed_count,
+                               in_progress_count=in_progress_count,
+                               completion_percentage=completion_percentage,
+                               breadcrumbs=breadcrumbs)

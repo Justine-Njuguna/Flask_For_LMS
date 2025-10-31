@@ -18,6 +18,7 @@
             </div>
             <div class="user-info">
                 {% if username %}
+                    <a href="/dashboard">📊 Dashboard</a> | 
                     👤 {{ username }} | <a href="/logout">Logout</a>
                 {% else %}
                     <a href="/login">Login</a> | <a href="/register">Register</a>
@@ -25,6 +26,22 @@
             </div>
         </nav>
         
+        {% if breadcrumbs %}
+            <nav aria-label="breadcrumb" class="breadcrumb-nav">
+                <ol>
+                    {% for crumb in breadcrumbs %}
+                        {% if not loop.last %}
+                            <li><a href="{{ crumb.url }}">{{ crumb.name }}</a></li>
+                            <span>/</span>
+                        {% else %}
+                            <li class="active" aria-current="page">{{ crumb.name }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ol>
+            </nav>
+
+        {% endif %}
+
         {% block content %}
         {% endblock %}
     </div>
