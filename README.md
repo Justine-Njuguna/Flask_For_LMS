@@ -1,364 +1,295 @@
 # TKA Learning Management System
 
-A fully-featured Learning Management System built with **Flask** for managing and delivering educational video content. This project includes user authentication, progress tracking, video embedding, course enrollment, search functionality, and course categorization.
+A fully-featured Learning Management System built with Flask for managing and delivering educational video content. This project includes user authentication, progress tracking, video embedding, search functionality, and course categorization.
 
----
+## Features
 
-## ✨ Features
+### Core Functionality
+- 🔐 **User Authentication** - Secure registration and login with password hashing
+- 👤 **User Registration** - New users can create accounts
+- 🎓 **Progress Tracking** - Mark courses as complete and track learning progress
+- 📹 **Video Embedding** - YouTube video integration with responsive players
+- 🔍 **Search Functionality** - Search courses by title or description
+- 🏷️ **Course Categories** - Organize courses into categories (Photography, Video Production, Design, etc.)
+- 📊 **Category Filtering** - Filter courses by category with one click
 
-### 🔧 Core Functionality
-- 🔐 **User Authentication** – Secure registration and login with password hashing  
-- 👤 **User Registration** – New users can create accounts  
-- 🎓 **Progress Tracking** – Mark courses as complete and track learning progress  
-- 📹 **Video Embedding** – YouTube video integration with responsive players  
-- 🔍 **Search Functionality** – Search courses by title or description  
-- 🏷️ **Course Categories** – Organize courses into categories (Photography, Video Production, Design, etc.)  
-- 📊 **Category Filtering** – Filter courses by category with one click  
+### Admin Features
+- ➕ **Add Courses** - Admin-only course creation
+- ✏️ **Edit Courses** - Modify course details, videos, and categories
+- 🗑️ **Delete Courses** - Remove courses with confirmation
+- 🔒 **Admin Protection** - All admin actions require authentication
 
----
+### User Experience
+- 🎨 **Modern UI** - Clean, gradient-based design with CSS styling
+- 📱 **Responsive Design** - Works on desktop and mobile
+- 📊 **User Dashboard** - Visual overview of completed courses and progress
+- 🗺️ **Breadcrumb Navigation** - Easy-to-follow navigation trail
+- 🎯 **Intuitive Navigation** - Easy-to-use interface with clear navigation
+- 💬 **User Feedback** - Success/error messages for all actions
+- 🔄 **Session Persistence** - Stay logged in across pages
 
-### 🛠️ Admin Features
-- ➕ **Add Courses** – Admin-only course creation  
-- ✏️ **Edit Courses** – Modify course details, videos, and categories  
-- 🗑️ **Delete Courses** – Remove courses with confirmation  
-- 🔒 **Admin Protection** – All admin actions require authentication  
+## Tech Stack
 
----
+- **Backend:** Flask (Python)
+- **Database:** SQLite with direct SQL queries
+- **Templating:** Jinja2
+- **Authentication:** Werkzeug password hashing
+- **Session Management:** Flask sessions
+- **Styling:** Custom CSS with gradient designs
 
-### 🧭 User Experience
-- 🎨 **Modern UI** – Clean, gradient-based design with custom CSS  
-- 📱 **Responsive Design** – Works on desktop and mobile  
-- 📊 **User Dashboard** – Visual overview of completed courses and progress  
-- 🗺️ **Breadcrumb Navigation** – Easy-to-follow navigation trail  
-- 🤝 **Course Enrollment** – Users must enroll in a course to view content  
-- 🌈 **Polished UI Enhancements** – Improved visuals, hover effects, and spacing  
-- 🔗 **Related Courses** – Shows other courses in the same category  
-- 🏷️ **Category Badges** – Displays the course category on the detail page  
-- ⚠️ **Custom Error Pages** – Beautiful 404 (Not Found) and 500 (Server Error) pages  
-- 🎯 **Intuitive Navigation** – Easy-to-use interface with clear navigation  
-- 💬 **User Feedback** – Success/error messages for all actions  
-- 🔄 **Session Persistence** – Stay logged in across pages  
-
----
-
-## 🧰 Tech Stack
-
-- **Backend:** Flask (Python)  
-- **Database:** SQLite (using direct SQL queries)  
-- **Templating:** Jinja2  
-- **Authentication:** Werkzeug password hashing  
-- **Session Management:** Flask sessions  
-- **Styling:** Custom CSS with gradient design  
-
----
-
-## 📁 Project Structure
+## Project Structure
 
 ```
 TKA_lms/
 ├── app.py                          # Main application entry point
 ├── helpers.py                      # Shared helper functions
 ├── routes/
-│   ├── __init__.py                 # Package initializer
-│   ├── auth.py                     # Authentication routes
-│   └── courses.py                  # Course management routes
+│   ├── __init__.py                # Package initializer
+│   ├── auth.py                    # Authentication routes
+│   └── courses.py                 # Course management routes
 ├── templates/                      # Jinja2 HTML templates
-│   ├── base.html                   # Base template with navigation
-│   ├── home.html                   # Home page
-│   ├── login.html                  # Login form
-│   ├── register.html               # Registration form
-│   ├── courses.html                # Course listing with search/filter
-│   ├── course_detail.html          # Individual course page
-│   ├── add_course.html             # Add course form (admin)
-│   ├── edit_course.html            # Edit course form (admin)
-│   ├── dashboard.html              # User progress dashboard
-│   ├── 404.html                    # Custom 404 error page
-│   └── 500.html                    # Custom 500 error page
+│   ├── base.html                  # Base template with navigation
+│   ├── home.html                  # Home page
+│   ├── login.html                 # Login form
+│   ├── register.html              # Registration form
+│   ├── courses.html               # Course listing with search/filter
+│   ├── course_detail.html         # Individual course page
+│   ├── add_course.html            # Add course form (admin)
+│   ├── edit_course.html           # Edit course form (admin)
+│   └── dashboard.html             # User progress dashboard
 ├── static/
 │   └── css/
-│       └── style.css               # Main stylesheet
-├── lms.db                          # SQLite database
-├── init_db.py                      # Initial database setup
-├── add_users_table.py              # Users table migration
-├── add_video_url_column.py         # Video URL column migration
-├── add_progress_tracking.py        # Progress tracking table migration
-├── add_categories.py               # Categories column migration
-├── add_enrollments_table.py        # Enrollments table migration
-├── make_admin.py                   # Set admin privileges
-├── venv/                           # Virtual environment (not in git)
-├── .gitignore                      # Git ignore file
-└── README.md                       # Project documentation
+│       └── style.css              # Main stylesheet
+├── lms.db                         # SQLite database
+├── init_db.py                     # Initial database setup
+├── add_users_table.py             # Users table migration
+├── add_video_url_column.py        # Video URL column migration
+├── add_progress_tracking.py       # Progress tracking table migration
+├── add_categories.py              # Categories column migration
+├── make_admin.py                  # Set admin privileges
+├── venv/                          # Virtual environment (not in git)
+├── .gitignore                     # Git ignore file
+└── README.md                      # Project documentation
 ```
 
----
+## Database Schema
 
-## 🗃️ Database Schema
+### users table
+- `id` - INTEGER PRIMARY KEY AUTOINCREMENT
+- `username` - TEXT UNIQUE NOT NULL
+- `password_hash` - TEXT NOT NULL (hashed with werkzeug)
+- `is_admin` - INTEGER DEFAULT 0 (1 for admin users)
 
-### **users**
-| Column | Type | Description |
-|---------|------|-------------|
-| id | INTEGER PRIMARY KEY AUTOINCREMENT | Unique user ID |
-| username | TEXT UNIQUE NOT NULL | Login username |
-| password_hash | TEXT NOT NULL | Hashed password |
-| is_admin | INTEGER DEFAULT 0 | 1 = Admin, 0 = Regular user |
+### courses table
+- `id` - INTEGER PRIMARY KEY AUTOINCREMENT
+- `title` - TEXT NOT NULL
+- `description` - TEXT NOT NULL
+- `video_url` - TEXT (YouTube/Vimeo URL)
+- `category` - TEXT DEFAULT 'General'
 
-### **courses**
-| Column | Type | Description |
-|---------|------|-------------|
-| id | INTEGER PRIMARY KEY AUTOINCREMENT | Unique course ID |
-| title | TEXT NOT NULL | Course title |
-| description | TEXT NOT NULL | Course description |
-| video_url | TEXT | YouTube/Vimeo URL |
-| category | TEXT DEFAULT 'General' | Course category |
+### course_progress table
+- `id` - INTEGER PRIMARY KEY AUTOINCREMENT
+- `user_id` - INTEGER NOT NULL (FK to users)
+- `course_id` - INTEGER NOT NULL (FK to courses)
+- `completed` - INTEGER DEFAULT 0 (0 or 1)
+- `completed_at` - TIMESTAMP
 
-### **course_progress**
-| Column | Type | Description |
-|---------|------|-------------|
-| id | INTEGER PRIMARY KEY AUTOINCREMENT | Record ID |
-| user_id | INTEGER NOT NULL | Foreign key to `users` |
-| course_id | INTEGER NOT NULL | Foreign key to `courses` |
-| completed | INTEGER DEFAULT 0 | 0 = incomplete, 1 = complete |
-| completed_at | TIMESTAMP | Completion time |
+## Setup & Installation
 
-### **enrollments**
-| Column | Type | Description |
-|---------|------|-------------|
-| id | INTEGER PRIMARY KEY AUTOINCREMENT | Enrollment ID |
-| user_id | INTEGER NOT NULL | Foreign key to `users` |
-| course_id | INTEGER NOT NULL | Foreign key to `courses` |
-| enrolled_at | TIMESTAMP DEFAULT CURRENT_TIMESTAMP | Enrollment time |
-| UNIQUE(user_id, course_id) | | Prevent duplicate enrollments |
-
----
-
-## ⚙️ Setup & Installation
-
-### 1️⃣ Clone the repository
+### 1. Clone the repository
 ```bash
 git clone https://github.com/Justine-Njuguna/Flask_For_LMS.git
 cd Flask_For_LMS
 ```
 
-### 2️⃣ Create and activate virtual environment
+### 2. Create and activate virtual environment
 ```bash
 python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # On Windows: venv\Scriptsctivate
 ```
 
-### 3️⃣ Install dependencies
+### 3. Install dependencies
 ```bash
 pip install flask
 ```
 
-### 4️⃣ Initialize the database
-Run these migration scripts in order:
+### 4. Initialize the database
 ```bash
 python init_db.py
 python add_users_table.py
 python add_video_url_column.py
 python add_progress_tracking.py
 python add_categories.py
-python add_enrollments_table.py
 python make_admin.py
 ```
 
-### 5️⃣ Run the application
+### 5. Run the application
 ```bash
 python app.py
 ```
 
-### 6️⃣ Access the app
-Open your browser and go to:
-```
-http://127.0.0.1:5000/
-```
+### 6. Access the app
+Open your browser and go to `http://127.0.0.1:5000/`
 
----
-
-## 👥 Usage
+## Usage
 
 ### Default Admin Credentials
-- **Username:** admin  
-- **Password:** password  
+- **Username:** admin
+- **Password:** password
 
 > ⚠️ Change these credentials in production!
 
 ### Available Routes
-| Route | Description |
-|--------|-------------|
-| `/` | Home page |
-| `/login` | Login page |
-| `/register` | User registration |
-| `/logout` | Logout and clear session |
-| `/courses` | View all courses |
-| `/course/<id>` | View individual course |
-| `/dashboard` | User progress dashboard |
-| `/add-course` | Add new course *(admin only)* |
-| `/edit-course/<id>` | Edit course *(admin only)* |
-| `/delete-course/<id>` | Delete course *(admin only, POST)* |
-| `/toggle-complete/<id>` | Mark course complete/incomplete *(POST)* |
-| `/enroll/<id>` | Enroll in course *(POST)* |
+- `/` - Home page
+- `/login` - Login page
+- `/register` - Create new account
+- `/logout` - Logout (clears session)
+- `/courses` - View all courses (with search and filter)
+- `/courses?search=keyword` - Search courses
+- `/courses?category=Photography` - Filter by category
+- `/course/<id>` - View specific course details
+- `/dashboard` - User progress dashboard
+- `/add-course` - Add new course (admin only)
+- `/edit-course/<id>` - Edit course (admin only)
+- `/delete-course/<id>` - Delete course (admin only, POST)
+- `/toggle-complete/<id>` - Mark course complete/incomplete (POST)
 
----
+## Features in Detail
 
-## 🧩 Features in Detail
+### Authentication System
+- Secure password hashing using Werkzeug's `generate_password_hash`
+- Session-based login persistence
+- User registration with duplicate username prevention
+- Password confirmation validation
+- Admin role management
 
-*(This section can be customized further with your feature-by-feature explanations as in the previous README — e.g., authentication flow, video embedding logic, progress tracking design, etc.)*
+### Course Management
+- Dynamic course listing from database
+- Video embedding with YouTube URL parsing
+- Category-based organization
+- Search functionality across title and description
+- Admin-only CRUD operations with proper POST requests
 
----
+### Progress Tracking
+- Mark courses as complete/incomplete
+- Track completion status per user
+- User Dashboard with progress visualization (stats, charts)
+- Progress data persists across sessions
+- Visual indicators for completed courses
 
-## 🛣️ Roadmap
+### Search & Filter
+- Real-time search through course titles and descriptions
+- Category-based filtering
+- Combined search + category filtering
+- Results count display
 
-### ✅ **Completed Features**
-All foundational LMS functionality is fully implemented and stable:
-- User authentication and session management  
-- Course creation, editing, and deletion (admin only)  
-- Course enrollment and completion tracking  
-- Search, filtering, and category badges  
-- Custom error pages (404 & 500)  
-- Responsive and visually polished interface  
+### Video Integration
+- Automatic YouTube URL parsing
+- Support for standard (`youtube.com/watch`) and short (`youtu.be`) URLs
+- Responsive 16:9 video player
+- Graceful handling of missing videos
 
-These form the “MVP” (Minimum Viable Product) of the LMS — a solid base ready for expansion.
+## Available Categories
+- 📷 Photography
+- 🎥 Video Production
+- 🎨 Design
+- 💻 Technology
+- 💼 Business
+- 📊 Marketing
+- 📚 General
 
----
+## Roadmap
 
-### 🧩 **Next Phase: User Experience Enhancements**
+### Next Up
+- [x] User dashboard with progress overview
+- [x] Related courses suggestions
+- [x] Breadcrumb navigation
 
-**Goal:** Improve usability, engagement, and personalization.
+### Planned Features
+- [x] Enrollment system
+- [x] Error pages added
+- [ ] Course reviews and ratings
+- [ ] Course prerequisites
+- [ ] Email notifications
+- [ ] Certificate generation
+- [ ] Course completion certificates
+- [ ] Discussion forums per course
+- [ ] Multiple video formats support
+- [ ] Course playlists
+- [ ] Learning paths
 
-Planned additions:
-- [ ] **Course Reviews and Ratings** – Let users leave feedback and rate courses.  
-- [ ] **User Profile Page** – Each user gets a personalized profile page.  
-- [ ] **Saved Courses / Favorites** – Bookmark courses for later.  
-- [ ] **Enhanced Mobile UI** – Improved mobile navigation and layouts.  
-- [ ] **Multi-language Support** – Add internationalization (i18n).  
+### Technical Improvements
+- [ ] Migrate to SQLAlchemy ORM
+- [ ] Add unit tests
+- [ ] Environment variables for configuration
+- [ ] Better error handling
+- [ ] API endpoints (REST)
+- [ ] React frontend (long-term)
+- [ ] Docker containerization
+- [ ] CI/CD pipeline
+- [ ] Production deployment (Nginx, Gunicorn)
 
-This phase turns the LMS into a more engaging and community-oriented platform.
+## Development Notes
 
----
+- Always activate virtual environment before working: `source venv/bin/activate`
+- Restart Flask after code changes: `Ctrl+C` then `python app.py`
+- Database migrations are idempotent (safe to run multiple times)
+- All passwords are hashed - never stored in plain text
+- Admin actions use POST requests to prevent CSRF
+- Follow PRG (Post-Redirect-Get) pattern for form submissions
 
-### 🔔 **Advanced Learning Features**
+## Security Features
 
-**Goal:** Deepen educational interactivity and structured learning.
-
-Planned upgrades:
-- [ ] **Course Prerequisites** – Unlock advanced courses after completing basics.  
-- [ ] **Email Notifications** – Auto-emails for enrollment or completion.  
-- [ ] **Certificate Generation** – PDF certificates using ReportLab.  
-- [ ] **Discussion Forums** – Per-course discussions to build community.  
-- [ ] **Instructor Profiles** – Dedicated instructor bio and course list pages.  
-- [ ] **Course Playlists / Learning Paths** – Structured, multi-step learning flows.  
-
-This phase transforms the LMS into a true **interactive e-learning system**.
-
----
-
-### ⚙️ **Technical Improvements**
-
-**Goal:** Strengthen maintainability, performance, and code quality.
-
-Planned refactors:
-- [ ] **Migrate to SQLAlchemy ORM** – Cleaner and more scalable data models.  
-- [ ] **Add Unit & Integration Tests** – Ensure app stability with automated testing.  
-- [ ] **Use Environment Variables** – Move sensitive configs to `.env`.  
-- [ ] **Enhanced Error Handling** – Centralized error reporting and logs.  
-- [ ] **Blueprint Refactor** – Modularize routes for scalability.  
-- [ ] **REST API Endpoints** – Prepare for frontend frameworks or mobile apps.  
-
-This keeps the LMS production-ready and developer-friendly.
-
----
-
-### ☁️ **Deployment & Scalability**
-
-**Goal:** Prepare for production deployment and real-world scalability.
-
-Upcoming milestones:
-- [ ] **Docker Containerization** – Portable, reproducible deployment environment.  
-- [ ] **CI/CD Pipeline** – Automated testing and deployment via GitHub Actions.  
-- [ ] **Production Stack** – Gunicorn + Nginx setup for performance.  
-- [ ] **Database Migration System** – Use Alembic instead of manual SQL scripts.  
-- [ ] **Cloud Database Integration** – Migrate to PostgreSQL/MySQL for production.  
-- [ ] **HTTPS/SSL Setup** – Secure web traffic with certificates.  
-
-Ensures the LMS runs securely, efficiently, and reliably in production.
-
----
-
-### 🌟 **Long-Term Vision**
-
-**Goal:** Evolve into an intelligent, AI-assisted LMS ecosystem.
-
-Future goals:
-- [ ] **AI-Powered Course Recommendations** – Suggest relevant courses dynamically.  
-- [ ] **Automatic Video Transcriptions & Subtitles** – Accessibility enhancements.  
-- [ ] **Real-Time Analytics Dashboard** – Track user activity and engagement visually.  
-- [ ] **External Integrations** – Support YouTube APIs, Google Classroom, etc.  
-- [ ] **Admin Insights & Reporting** – Charts and metrics for admins/instructors.  
-
----
-
-✅ **Current Status:** Fully functional LMS with enrollment, video integration, and polished UI.  
-🧭 **Next Step:** Implement **user profiles and course reviews**.  
-🚀 **Long-Term Goal:** A scalable, AI-enhanced, production-ready learning platform.
-
----
-
-## 🧑‍💻 Development Notes
-
-- Always activate virtual environment: `source venv/bin/activate`  
-- Restart Flask after edits: `Ctrl+C` then `python app.py`  
-- Migrations are safe to run multiple times  
-- Passwords are hashed – never stored in plain text  
-- Admin actions use POST requests to prevent CSRF  
-- PRG (Post-Redirect-Get) pattern used for form submissions  
-
----
-
-## 🔐 Security Features
-
-✅ Password hashing (Werkzeug)  
-✅ Parameterized SQL queries (SQL injection protection)  
+✅ Password hashing with Werkzeug  
+✅ SQL injection prevention with parameterized queries  
 ✅ Admin-only route protection  
 ✅ Session-based authentication  
 ✅ POST-only destructive operations  
-✅ Confirmation dialogs for deletions  
+✅ CSRF confirmation dialogs
+
+## Contributing
+
+This is a learning project built to understand full-stack web development. Suggestions and improvements are welcome!
+
+## Security Note
+
+⚠️ **For Learning/Development Use Only** - This project uses basic security practices suitable for learning. For production deployment, implement:
+- Environment variables for secrets (`.env` file)
+- HTTPS/SSL certificates
+- CSRF protection tokens
+- Rate limiting on login attempts
+- More robust session management
+- Database connection pooling
+- Input sanitization and validation
+- Security headers
+- Regular security audits
+
+## License
+
+MIT License - feel free to use this for your own learning projects.
+
+## Author
+
+Built by **Aeldra** as part of learning Flask and full-stack web development.
+
+### Learning Journey
+This project was built progressively over multiple sessions, adding features one at a time:
+1. Basic Flask setup and routing
+2. User authentication and sessions
+3. Database integration with SQLite
+4. Jinja2 templating and styling
+5. Admin CRUD operations
+6. Video embedding functionality
+7. Progress tracking system
+8. Search functionality
+9. Course categorization and filtering
+10. User dashboard and progress visualization
+11. Breadcrumb navigation system
+
+Each feature was implemented with proper security, error handling, and user experience in mind.
 
 ---
 
-## 🤝 Contributing
+**Current Status:** Fully functional LMS with authentication, video courses, progress tracking, search, and categorization! 🎉
 
-This is a **learning project** for exploring Flask and full-stack web development.  
-Pull requests, suggestions, and feature ideas are always welcome!
-
----
-
-## ⚠️ Security Note
-
-> For learning/development use only.  
-> Before production deployment, implement:
-- `.env` environment variables  
-- HTTPS/SSL encryption  
-- CSRF protection  
-- Rate limiting on login attempts  
-- Enhanced session management  
-- Input sanitization and validation  
-- Security headers  
-- Regular security audits  
-
----
-
-## 📜 License
-
-MIT License – free for learning, adaptation, and non-commercial use.
-
----
-
-## 👩‍💻 Author
-
-Built by **Aeldra** as part of a journey to master Flask and full-stack web development.
-
----
-
-**Current Status:** ✅ Fully functional LMS with authentication, enrollment, video content, progress tracking, and category filtering.  
-**Next Steps:** ⭐ Add course reviews, profiles, and notifications.
+**Next Steps:** User dashboard, course reviews, and deployment preparation.
