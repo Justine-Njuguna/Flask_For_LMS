@@ -1,10 +1,3 @@
-Perfect 👍 — here’s your **fully updated and expanded `README.md`**, incorporating everything from your previous version *plus* the complete, explanatory **Roadmap** with all phases expanded.
-
-You can copy this directly into your repo — it’s fully formatted and ready to go.
-
----
-
-````{"id":"58392","variant":"standard","title":"TKA Learning Management System – Expanded README"}
 # TKA Learning Management System
 
 A fully-featured Learning Management System built with **Flask** for managing and delivering educational video content. This project includes user authentication, progress tracking, video embedding, course enrollment, search functionality, and course categorization.
