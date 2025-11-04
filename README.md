@@ -362,4 +362,3 @@ Built by **Aeldra** as part of a journey to master Flask and full-stack web deve
 
 **Current Status:** ✅ Fully functional LMS with authentication, enrollment, video content, progress tracking, and category filtering.  
 **Next Steps:** ⭐ Add course reviews, profiles, and notifications.
-````
