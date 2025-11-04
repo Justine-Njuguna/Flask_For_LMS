@@ -200,7 +200,7 @@ Open your browser and go to `http://127.0.0.1:5000/`
 
 ## Roadmap
 
-### Planned Features
+### Planned/(Added) Features
 - [x] Enrollment system
 - [x] Error pages added
 - [ ] Course reviews and ratings
