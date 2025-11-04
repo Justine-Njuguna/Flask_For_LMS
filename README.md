@@ -200,11 +200,6 @@ Open your browser and go to `http://127.0.0.1:5000/`
 
 ## Roadmap
 
-### Next Up
-- [x] User dashboard with progress overview
-- [x] Related courses suggestions
-- [x] Breadcrumb navigation
-
 ### Planned Features
 - [x] Enrollment system
 - [x] Error pages added
