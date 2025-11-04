@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Server Error (500) - TKA Learning{% endblock %}
+
+{% block content %}
+    <div style="text-align: center; margin-top: 50px;">
+        <h1 style="font-size: 4em; margin-bottom: 10px;">500</h1>
+        <h2>Internal Server Error</h2>
+        <p style="color: #666; margin-top: 20px;">
+            Oops! Something went wrong on our end. We're looking into it.
+        </p>
+        <p style="margin-top: 30px;">
+            <a href="{{ url_for('home') }}" class="btn">Go Back Home</a>
+        </p>
+    </div>
+{% endblock %}

@@ -20,6 +20,17 @@ def home():
     admin = is_admin() if user else False
     return render_template('home.html', username=user, is_admin=admin)
 
+
+@app.errorhandler(404)
+def not_found_error(error):
+    """Handles 404 Not Found errors."""
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    """Handles 500 Internal Server errors."""
+    return render_template('500.html'), 500
+
 # Run the app
 if __name__ == '__main__':
     app.run(debug=True)

@@ -454,3 +454,19 @@ button[type="submit"]:hover,
 .empty-state p {
   color: #6b7280;
 }
+
+/* --- Category Badge --- */
+.category-badge-container {
+    margin-top: -10px; /* Pull it closer to the title */
+    margin-bottom: 20px;
+    color: #555;
+    font-size: 0.9em;
+}
+
+.category-badge {
+    background-color: #e0e0e0; /* A light gray background */
+    color: #333;
+    padding: 4px 10px;
+    border-radius: 15px; /* This makes it pill-shaped */
+    font-weight: 600;
+}

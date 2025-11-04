@@ -1,7 +1,8 @@
 """Course-related routes."""
 
+import sqlite3
 from urllib.parse import urlparse, parse_qs
-from flask import render_template, session, redirect, request
+from flask import render_template, session, redirect, request, url_for
 from helpers import is_admin, get_db_connection, get_user_id, is_course_completed
 
 
@@ -95,62 +96,70 @@ def register_course_routes(app):
                             category_filter=category_filter,
                             breadcrumbs=breadcrumbs)
 
-# Individual course details
     @app.route('/course/<int:course_id>')
     def course_details(course_id):
         """Course details page route"""
-        # Connect to database and fetch specific course
-        conn = get_db_connection()
+        conn = get_db_connection() 
         course = conn.execute(
             'SELECT * FROM courses WHERE id = ?', 
             (course_id,)
         ).fetchone()
-        conn.close()
-
+        
+        # Get related courses (same category, exclude current course, limit 4)
+        related_courses = []
+        if course and course['category']:
+            related_courses = conn.execute(
+                'SELECT * FROM courses WHERE category = ? AND id != ? LIMIT 4',
+                (course['category'], course_id)
+            ).fetchall()
+        
+        # --- THIS IS THE NEW LOGIC ---
+        is_enrolled = False
+        user_id = None
         user = session.get('username')
-        admin = is_admin()
+        if user:
+            user_id = get_user_id(user)
+            if user_id and course: # Check if user_id and course exist
+                enrollment = conn.execute(
+                    'SELECT id FROM enrollments WHERE user_id = ? AND course_id = ?',
+                    (user_id, course_id)
+                ).fetchone()
+                if enrollment:
+                    is_enrolled = True
+        # --- END OF NEW LOGIC ---
 
-        # Initialize variables that depend on the course
+        conn.close() # Close after ALL queries
+
+        admin = is_admin()
         is_completed = False
         embed_url = None
-        breadcrumbs = []  # Start with an empty list
+        breadcrumbs = []  
 
         if course:
-            # --- This logic runs ONLY if the course was found ---
-
-            # Check completion status
-            if user:
-                user_id = get_user_id(user)
-                if user_id:
-                    is_completed = is_course_completed(user_id, course_id)
-
-            # Get the embed URL (this is now safe)
+            if user_id: # We already have user_id
+                is_completed = is_course_completed(user_id, course_id)
+            
             embed_url = get_youtube_embed_url(course['video_url'])
-
-            # NEW: Define the breadcrumbs for this page
             breadcrumbs = [
                 { "name": "Home", "url": "/" },
                 { "name": "Courses", "url": "/courses" },
-                { "name": course['title'], "url": None } # Dynamic name
+                { "name": course['title'], "url": None }
             ]
         else:
-            # --- This logic runs if course is None (Not Found) ---
-
-            # NEW: Define breadcrumbs for the "Not Found" case
             breadcrumbs = [
                 { "name": "Home", "url": "/" },
                 { "name": "Not Found", "url": None }
             ]
 
-        # This return statement now handles all cases
         return render_template('course_detail.html',
-                               course=course, 
-                               username=user, 
+                               course=course,
+                               username=user,
                                is_admin=admin,
-                               embed_url=embed_url, 
+                               embed_url=embed_url,
                                is_completed=is_completed,
-                               breadcrumbs=breadcrumbs) # <-- Pass the new list
-
+                               breadcrumbs=breadcrumbs,
+                               related_courses=related_courses,
+                               is_enrolled=is_enrolled) # <-- Pass the new variable
     # Add course page (GET - show form)
     @app.route('/add-course')
     def add_course():
@@ -158,7 +167,7 @@ def register_course_routes(app):
         # Check if user is logged in
         if not is_admin():
             return redirect('/login')
-        
+
         # Define breadcrumbs
         breadcrumbs = [
             { "name": "Home", "url": "/" },
@@ -223,7 +232,7 @@ def register_course_routes(app):
             (course_id,)
         ).fetchone()
         conn.close()
-        
+
         # define breadcrumbs
         breadcrumbs = [
             { "name": "Home", "url": "/" },
@@ -257,6 +266,35 @@ def register_course_routes(app):
         # Redirect to course detail page (PRG pattern!)
         return redirect(f'/course/{course_id}')
 
+    # Route to enroll in a course
+    @app.route('/enroll/<int:course_id>', methods=['POST'])
+    def enroll_course(course_id):
+        """Enroll the current user in a course."""
+        if 'username' not in session:
+            return redirect(url_for('login')) # use url_for for routes
+        
+        user_id = get_user_id(session['username'])
+        if not user_id:
+            return redirect(url_for('login'))
+        
+        conn = get_db_connection()
+        try:
+            # Try to insert the new enrollment
+            conn.execute(
+                'INSERT INTO enrollments (user_id, course_id) VALUES (?, ?)',
+                (user_id, course_id)
+            )
+            conn.commit()
+        except sqlite3.IntegrityError:
+            # This error fires if the UNIQUE constraint fails
+            # (meaning)the user is already enrolled).
+            # We can just ignore it.
+            pass
+        finally:
+            conn.close()
+            
+        # Redirect back to the course page
+        return redirect(url_for('course_details', course_id=course_id))
     # Mark course as complete/incomplete
     @app.route('/toggle-complete/<int:course_id>', methods=['POST'])
     def toggle_complete(course_id):
